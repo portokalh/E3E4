@@ -1,0 +1,5 @@
+# info stub from /Volumes/workstation_home/software/bin/puller_simple
+# \/ repeat_command_line \/
+/Volumes/workstation_home/software/bin/puller_simple -or nemo /20160211.Gb1/19 /cretespace/B05271.work/
+# /\ repeat_command_line /\
+data_file=/20160211.Gb1/19

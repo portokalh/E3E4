@@ -1,0 +1,1 @@
+java -mx8096M -jar /Applications/ImageJ//ImageJ64.app/Contents/Resources/Java/ij.jar -ijpath /Applications/ImageJ//ImageJ64.app/Contents/Resources/Java/../../../../plugins/.. -macro /cretespace/B05271.work/B05271.ijm
