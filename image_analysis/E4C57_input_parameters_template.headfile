@@ -1,0 +1,148 @@
+### REQUIRED PARAMETERS ###
+project_name=16.abb.09
+
+recon_engine=delos
+
+#add this to controls N54892 21 controls
+control_comma_list=N54892,N54818,N54824,N54825,N54826,N54837,N54838,N54843,N54844,N54856,N54857,N54858,N54898,N54899,N54891,N54900,N54893,N54897,N54760,N54759,N54765
+## Hint: control_comma_list should include all runnos that you want to contribute to the creation of the MDT (aka template)
+
+#14 compare E4+C57
+compare_comma_list=N54915,N54916,N54717,N54917,N54718,N54719,N54720,N54722,N54761,N54762,N54763,N54764,N54766,N54770,N54892,N54818,N54824,N54825,N54826,N54837,N54838,N54843,N54844,N54856,N54857,N54858,N54898,N54899,N54891,N54900,N54893,N54897,N54760,N54759,N54765
+## Hint: compare_comma_list should include all runnos that should be independently re-registered to the final MDT once it has been created.
+
+#groups used for fsl stats
+#group_1_comma_list
+#group_2_comma_list
+
+#smoothing_comma_list=1,2,3,0.1mm
+smoothing_comma_list=1,3
+
+vba_contrast_comma_list=fa
+
+#C57old; N54891 duplicates N54900 but has no LR indication, using N54900LR for now though it is a later scan
+group_1_runnos=N54892,N54818,N54824,N54825,N54826,N54837,N54838,N54843,N54844,N54856,N54857,N54858,N54898,N54899,N54900,N54893,N54897,N54760,N54759,N54765
+
+#E4
+group_2_runnos=N54915,N54916,N54717,N54917,N54718,N54719,N54720,N54722,N54761,N54762,N54763,N54764,N54766,N54770 
+
+#10E3 
+#E3
+#N54804,N54806,N54807,N54771,N54772,N54801,N54802,N54803,N54798,N54805
+#C57young
+#N54859,N54860,N54861,N54873,N54874,N54875,N54876,N54877,N54879,N54880
+
+## Hint: group_1_runnos and group_2_runnos should be mutually exclusive, as they are used for VBA and label statistical comparisons
+
+custom_predictor_string=C57_vs_E4  
+## Hint: This is optional, and is how you can "name" the groups; i.e. nos2 is the name of group_1 and cvn is the name of group_2 in the example above.
+## Hint: This will default to control_vs_treated if not specified.
+
+channel_comma_list=dwi,fa,e1,e2,e3,adc
+
+## Hint: At a minimum, this must at least include any contrasts used to drive registration.
+
+# Rigid (coarse) alignment options
+atlas_name=chass_symmetric2
+rigid_contrast=dwi
+
+# Non-linear (diffeomorphic) registration options
+mdt_contrast=fa
+mdt_creation_strategy=iterative
+## Hint: options for mdt_creation_strategy include 'iterative' and 'pairwise'
+
+mdt_iterations=6
+## Hint: You want at least 4 mdt_iterations, as this is the first fully-sampled level
+
+diffeo_transform_parameters=0.5,3,0.5
+#diffeo_iterations=1000x1000x1000x100
+#100x100x100x60
+
+### Various optional parameters ###
+
+optional_suffix=alxtext_analysis
+## Hint: optional_suffix will be appended to the main directory names, before -inputs/-work/-results.
+
+vbm_reference_space=N54900
+#vbm_reference_space=native
+## Hint: vbm_reference_space can be a specific runno, an arbitrary image, the name of an atlas, or 'native' (the first control runno).
+
+
+## Connectivity processing options
+
+#convert_labels_to_RAS=1
+## Hint: historically, the default working orientation is ALS, so convert_labels_to_RAS will turn final labels from ALS to RAS.
+
+do_connectivity=1
+## Hint: do_connectivity=1 will process the 4D diffusion nifti stack and bvals/bvecs to be used as input into another program such mrtrix or DSI studio
+##       Only DSI studio is fully supported right now for bval/bvec processing and formatting.
+
+
+#affine_contrast=dwi
+#affine_target=N54892
+## Hint: affine_target will be the first control runno if not specified.  Future support will allow for the average of the rigidly aligned images to be the affine registration target.
+
+
+## Image orientation options 
+
+#working_image_orientation=ALS
+## Hint: All work will be performed in working_image_orientation, which is ALS by default which is based on the current standard atlas orientation.
+## Hint: Support of arbitrary orientations is forthcoming, and will be RAS in the future.
+
+#original_study_orientation=PRS
+## Hint: This describes the current orientation of all the incoming images, assuming they are uniformly oriented.
+## Hint: Support for handling outliers is forthcoming and will be in the form of:
+##       original_orientation_N51201=LPI (i.e. original_orientation_$runno=...)
+
+#flip_x=1
+## Hint: flip_x=1 will rotate incoming images from PRS to ALS.
+## Hint: This will be deprecated shortly.
+
+
+#flip_z=0
+## Hint: flip_z=1 will rotate incoming images from ARI to ALS.
+## Hint: This will be deprecated shortly.
+
+## Hint: flip_x=1 and flip_z=1 will take images from PLI to ALS.
+
+
+
+
+# Label options
+create_labels=1
+label_atlas_name=chass_symmetric2
+label_space=pre_rigid
+## Hint: Multiple, comma-limited label_space options can be specified, and include:
+##       'pre_rigid': Native space of incoming images without any transforms applied
+##       'post_rigid' (or 'pre_affine'): Only the rigid linear transform will be applied to the images (no scaling or shearing)
+##       'post_affine': The rigid and affine linear transforms will be applied to the images (translation+rotation+scaling+shearing)
+##       'MDT': All images will be affinely and diffeomorphically mapped into the MDT label set
+##       'atlas': All images will be affinely and diffeomorphically mapped into the original atlas label set	
+  
+# Masking/skull-stripping options	
+skull_strip_contrast=dwi
+## Hint: our automated skull-stripping is optimized for dwi
+
+threshold_code=4
+do_mask=1
+port_atlas_mask=0
+## Hint: port_atlas_mask will align and scale the atlas mask to the results of the automated skull-stripping
+
+#pre_masked=0
+## Hint: pre_masked=1 will result in do_mask=0; this is if your input images are already masked.
+
+
+## VBA Options
+
+vba_analysis_software=fsl
+#surfstat
+## Hint: multiple comma-delimited options can be specified and include: surfstat (default),fsl,ANTsR, and spm.
+## Hint: fsl must be included if you want to do nonparametric testing
+
+#nonparametric_permutations=6000
+#fdr_masks=ROI:51:1051,label:1:2:3:4:5:6,fa:0.3:1
+## Hint: Full help on how to specify ROI/label-based and threshholded contrast-based fdr maps is forthcoming.
+
+eddy_current_correction=1
+
+convert_labels_to_RAS=1
